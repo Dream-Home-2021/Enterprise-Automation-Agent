@@ -1,35 +1,17 @@
-# Python
-*.pyc
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
-
-# Virtual Environment
-venv/
+*.egg-info/
+dist/
+build/
 .venv/
-env/
-
-# IDE
+venv/
+.env
 .vscode/
 .idea/
 *.swp
-*.swo
-
-# Environment Variables (NEVER commit secrets)
-.env
-
-# Data & Logs
-/data/
-*.log
-
-# LangGraph
-.langgraph/
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Distribution
-dist/
-build/
-*.egg-info/
+*.log
+.langgraph/
