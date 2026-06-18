@@ -1,40 +1,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Gradio 聊天界面
-
-定义聊天界面样式，通过 `generate_response` 函数模拟大语言模型的回复。
+Gradio 聊天界面 UI 组件。
 """
 
 import gradio as gr
-import random
-import time
 import os
 
 
-# 模拟大语言模型生成回复
-def generate_response(message, history):
-    if not message.strip():
-        return message, history
-
-    # 模拟大语言模型处理延迟
-    processing_time = random.uniform(0.5, 1.5)
-    time.sleep(processing_time)
-
-    # 模拟生成智能回复
-    responses = [
-        "这是一个基于大语言模型的回复示例。",
-        "我理解你的查询了。",
-        "感谢你的提问！"
-    ]
-
-    # 使用新的消息格式
-    history.append({"role": "user", "content": message})
-    history.append({"role": "assistant", "content": random.choice(responses)})
-    return "", history
-
-
-# 自定义 CSS 样式
 custom_css = """
 html, body {
     height: 100%;
@@ -359,17 +332,3 @@ def create_ui(llm_func, tab_name, main_title, initial_message=None):
     return ui
 
 
-if __name__ == "__main__":
-    app = create_ui(
-        llm_func=generate_response,
-        tab_name="Gradio APP - WebUI",
-        main_title="Gradio WebUI Demo",
-    )
-
-    app.launch(
-        server_name="localhost",
-        server_port=7860,
-        share=False,  # 内部使用时，必须为 False
-        theme=theme,
-        css=custom_css
-    )
