@@ -52,7 +52,10 @@
       "Bash(D:\\\\ppyy\\\\Anaconda\\\\python.exe -m pytest app/tests/ -v --tb=short)",
       "Bash(git checkout *)",
       "Bash(git remote *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git rm *)"
     ]
   }
 }
