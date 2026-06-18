@@ -2,7 +2,7 @@
   "permissions": {
     "allow": [
       "PowerShell(curl.exe -s http://localhost:8000/user/metrics?username=main)",
-      "PowerShell(curl.exe -s -X POST http://localhost:8000/chat -H \"Content-Type: application/json\" -d \"{\\\\\"username\\\\\":\\\\\"main\\\\\",\\\\\"message\\\\\":\\\\\"��ã�����ҷ�������\\\\\"}\")",
+      "PowerShell(curl.exe -s -X POST http://localhost:8000/chat -H \"Content-Type: application/json\" -d \"{\\\"username\\\":\\\"main\\\",\\\"message\\\":\\\"你好，请帮我发送\\\"}\")",
       "PowerShell(curl.exe -s -X POST http://localhost:8000/chat -H \"Content-Type: application/json\" -d '@test_chat.json')",
       "PowerShell(Stop-Process -Name python -Force -ErrorAction SilentlyContinue)",
       "PowerShell(curl.exe -s http://localhost:8000/health)",
@@ -45,7 +45,7 @@
       "Bash(cmd /c \"pip list\")",
       "Bash(pip list *)",
       "Bash(cmd /c \"d: && cd GameDownload\\\\dynamic-emotional-agent && python -m pytest app/tests/ -v --tb=short 2>&1\")",
-      "Bash(cmd /c \"d: && cd GameDownload\\\\dynamic-emotional-agent && python -c \\\\\"import sys; sys.path.insert\\(0, '.'\\); from app.tests.test_emotion import *; print\\('imports ok'\\)\\\\\")",
+      "Bash(cmd /c \"d: && cd GameDownload\\\\dynamic-emotional-agent && python -c \\\"import sys; sys.path.insert\\(0, '.'\\); from app.tests.test_emotion import *; print\\('imports ok'\\)\\\")",
       "Bash(cmd /c \"d: && cd GameDownload\\\\dynamic-emotional-agent && python -m pytest app/tests/ -v --tb=short\")",
       "Bash(python -m pytest app/tests/ -v --tb=short)",
       "Bash(where python *)",
@@ -55,7 +55,9 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(git push *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(git merge *)",
+      "Bash(git stash *)"
     ]
   }
 }
