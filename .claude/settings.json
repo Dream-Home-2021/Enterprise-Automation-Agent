@@ -8,7 +8,21 @@
       "Bash(git push *)",
       "Bash(git rm *)",
       "Bash(git merge *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(Copy-Item \"D:\\\\GameDownload\\\\dive-into-langgraph-main\\\\app\\\\utils\\\\web_ui.py\" \"D:\\\\GameDownload\\\\My-agent\\\\utils\\\\web_ui.py\")",
+      "Bash(Copy-Item \"D:\\\\GameDownload\\\\dive-into-langgraph-main\\\\app\\\\images\\\\*\" \"D:\\\\GameDownload\\\\My-agent\\\\images\\\\\"; Write-Host \"Files copied\")",
+      "Read(//c/Users/Administrator/.claude/plans/**)",
+      "Read(//d/GameDownload/dive-into-langgraph-main/app/utils/**)",
+      "Read(//c/Users/Administrator/.claude/skills/dive-into-langgraph/references/**)",
+      "Read(//c/Users/Administrator/.agents/skills/dive-into-langgraph/references/**)",
+      "Read(//d/GameDownload/dive-into-langgraph-main/app/**)",
+      "Read(//d/GameDownload/dive-into-langgraph-main/**)",
+      "Bash(cp \"D:/GameDownload/dive-into-langgraph-main/app/images/user.png\" \"D:/GameDownload/My-agent/images/user.png\")",
+      "Bash(cp \"D:/GameDownload/dive-into-langgraph-main/app/images/ai.png\" \"D:/GameDownload/My-agent/images/ai.png\")",
+      "Bash(cp \"D:/GameDownload/dive-into-langgraph-main/app/utils/web_ui.py\" \"D:/GameDownload/My-agent/utils/web_ui.py\" && echo \"web_ui.py copied\")"
+    ],
+    "additionalDirectories": [
+      "D:\\GameDownload\\dive-into-langgraph-main\\app\\utils"
     ]
   }
 }
