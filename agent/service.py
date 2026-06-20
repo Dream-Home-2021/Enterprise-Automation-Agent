@@ -1,43 +1,17 @@
 """
-Agent 核心逻辑：创建 ReAct Agent + 流式响应生成器
+Agent 核心逻辑：Supervisor Graph + 流式响应
 """
-import os
-from typing import Any, AsyncIterator, Tuple
+
+from typing import AsyncIterator, Tuple
 
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
-from langchain.agents import create_agent
+from langchain_core.messages import AIMessageChunk
 
-from tools.math import TOOLS
+from agent.supervisor.graph import get_supervisor
 from utils.log import get_logger
 
 load_dotenv()
 logger = get_logger(__name__)
-
-
-def _create_llm() -> ChatOpenAI:
-    return ChatOpenAI(
-        model=os.getenv("OPENAI_MODEL", "qwen-plus-latest"),
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_BASE_URL"),
-        temperature=0.7,
-    )
-
-
-def _log_stream_event(chunk: Any, metadata: dict) -> None:
-    """记录流式事件日志：模型文本 / 工具调用 / 工具结果。"""
-    node = metadata.get("langgraph_node", "unknown")
-
-    if node == "model":
-        # 模型流式文本
-        if getattr(chunk, "content", None):
-            logger.info("model: %s", chunk.content[:80])
-        # 工具调用请求（可能和文本同 chunk，不用 elif）
-        if getattr(chunk, "tool_calls", None):
-            for tc in chunk.tool_calls:
-                logger.info("tool_call: %s %s", tc.get("name", "?"), tc.get("args", {}))
-    elif node == "tools" and getattr(chunk, "content", None):
-        logger.info("tool_result [%s]: %s", getattr(chunk, "name", "?"), chunk.content[:120])
 
 
 def make_generate_response():
@@ -45,13 +19,8 @@ def make_generate_response():
     工厂函数，返回 Gradio 需要的 async generator。
     签名: (message, history) -> AsyncIterator[Tuple[str, list]]
     """
-    llm = _create_llm()
-    agent = create_agent(
-        model=llm,
-        tools=TOOLS,
-        system_prompt="你是一个智能助手，可以使用数学工具和互联网搜索工具来帮助用户。",
-    )
-    logger.info("Agent created with %d tools", len(TOOLS))
+    supervisor = get_supervisor()
+    logger.info("Supervisor graph ready")
 
     async def generate_response(
         message: str, history: list
@@ -62,24 +31,42 @@ def make_generate_response():
             return
 
         history.append({"role": "user", "content": msg})
+        logger.info("user: %s", msg[:80])
+
         content = ""
-        inputs = {"messages": [{"role": "user", "content": msg}]}
+        # 使用 messages 模式流式输出
+        async for chunk, metadata in supervisor.astream(
+            {"messages": [{"role": "user", "content": msg}]},
+            stream_mode="messages",
+        ):
+            node = metadata.get("langgraph_node", "unknown")
 
-        async for chunk, metadata in agent.astream(inputs, stream_mode="messages"):
-            _log_stream_event(chunk, metadata)
+            # 记录日志
+            if isinstance(chunk, AIMessageChunk):
+                if node == "supervisor" and chunk.content:
+                    logger.debug("supervisor: %s", chunk.content[:60])
 
-            if metadata.get("langgraph_node") == "model" and getattr(chunk, "content", None):
-                content += chunk.content
+            # tools 节点的 content 是子 Agent 的返回结果，直接展示给用户
+            if chunk.content:
+                if node == "supervisor":
+                    content += chunk.content
+                elif node == "tools" and chunk.content:
+                    # 子 Agent 的完整结果作为一段内容显示
+                    tool_text = chunk.content
+                    if len(tool_text) > len(content):
+                        content = tool_text
                 yield "", [*history, {"role": "assistant", "content": content}]
 
-        # 纯工具调用场景下 content 为空，重新 invoke 获取回复
+        # 如果 messages 模式没有流到文本，用 ainvoke 兜底拿结果
         if not content:
-            logger.info("No text streamed, fallback to ainvoke")
-            result = await agent.ainvoke(inputs)
+            logger.info("No text streamed from messages mode, fallback to ainvoke")
+            result = await supervisor.ainvoke({
+                "messages": [{"role": "user", "content": msg}]
+            })
             content = result["messages"][-1].content
 
         history.append({"role": "assistant", "content": content})
-        logger.info("Responded: %d chars", len(content))
+        logger.info("responded: %d chars", len(content))
         yield "", history
 
     return generate_response
