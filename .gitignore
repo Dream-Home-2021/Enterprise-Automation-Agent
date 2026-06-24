@@ -14,4 +14,32 @@ venv/
 .DS_Store
 Thumbs.db
 *.log
+logs/
 .langgraph/
+docs/
+zammad-docker-compose/
+
+# 本地缓存 不上传
+.cache/
+*.cache
+temp/
+tmp/
+*.tmp
+*.bak
+*.old
+node_modules/
+.conda/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+*.tar.gz
+*.zip
+*.7z
+
+# pgvector 子模块源码
+agent/db/pgvector/

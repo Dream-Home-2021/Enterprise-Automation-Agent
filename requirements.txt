@@ -1,7 +1,7 @@
 # Core Framework
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
-langgraph==0.2.60
+langgraph>=1.1.10
 langchain-openai==0.2.14
 langchain-core==0.3.28
 langchain-community==0.3.14
@@ -38,9 +38,15 @@ httpx==0.28.1
 # Web Search
 dashscope>=1.0.0
 
-# UI
-gradio>=4.0
+# UI (replaced by static HTML + FastAPI)
 
 # Linting
 flake8==7.1.1
 black==24.10.0
+
+# ===== Memory System =====
+redis>=5.0
+asyncpg>=0.30.0
+pgvector>=0.4.0
+orjson
+langgraph-checkpoint-redis
