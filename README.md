@@ -562,6 +562,27 @@ langgraph dev
 
 ---
 
+## 致谢
+
+本项目的核心研究流水线架构（Hypothesis → Process → Search/Code/Visualization → Report → QualityReview 工作流）深受 [**DATAGEN**](https://github.com/zi-yue-1129/DATAGEN) 项目的启发。
+
+> **DATAGEN** — *AI-driven multi-agent research assistant automating hypothesis generation, data analysis, and report writing.*
+>
+> 作者：[@zi-yue-1129](https://github.com/zi-yue-1129)
+> 仓库：[https://github.com/zi-yue-1129/DATAGEN](https://github.com/zi-yue-1129/DATAGEN)
+
+DATAGEN 提供了多智能体协同研究自动化的设计范式，本项目在此基础上进行了以下扩展：
+
+- 集成 **Zammad 工单管理**，支持 Chat 与 Analysis 双模式路由
+- 引入 **Redis + PostgreSQL 双层记忆系统**，实现跨会话状态持久化
+- 增加 **LangGraph interrupt()** 人机协作机制
+- 添加 **Vue 3 前端**与 **SSE 流式推送**
+- 接入 **MCP 协议**工具生态与 **LangSmith** 可观测性
+
+感谢 DATAGEN 的作者和贡献者们的开创性工作 🙏
+
+---
+
 ## 许可证
 
 MIT License
