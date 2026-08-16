@@ -6,14 +6,14 @@
 """
 
 import json
-import os
 import re
 import time
 from typing import Any
 
-from langchain_openai import ChatOpenAI
 from langchain_core.messages import BaseMessage
 
+from agent.src.config import AGENT_MODELS
+from agent.src.llm.factory import ProviderFactory
 from agent.db import postgres as db
 from utils.log import get_logger
 
@@ -22,17 +22,27 @@ logger = get_logger(__name__)
 # ── LLM 客户端 ──────────────────────────────────────────────────
 
 _EXTRACTION_LLM = None
+_EXTRACT_AGENT_NAME = "profile_extract_agent"
 
 
 def _get_llm():
+    """从 agent_models.yaml profile_extract_agent 配置创建 LLM 实例。"""
     global _EXTRACTION_LLM
     if _EXTRACTION_LLM is None:
-        _EXTRACTION_LLM = ChatOpenAI(
-            model=os.getenv("MEMORY_EXTRACT_MODEL", os.getenv("OPENAI_MODEL", "qwen-plus-latest")),
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL"),
-            temperature=0.1,
-        )
+        provider_name = AGENT_MODELS.get_provider(_EXTRACT_AGENT_NAME)
+        model_config = AGENT_MODELS.get_model_config(_EXTRACT_AGENT_NAME).copy()
+
+        provider = ProviderFactory().create_provider(provider_name)
+        model_class = provider.get_model_class()
+
+        # 提取/摘要需更低温度保证一致性
+        model_config["temperature"] = 0.1
+
+        # 补充供应商专属参数（base_url、api_key、headers 等）
+        if hasattr(provider, "get_extra_kwargs"):
+            model_config.update(provider.get_extra_kwargs())
+
+        _EXTRACTION_LLM = model_class(**model_config)
     return _EXTRACTION_LLM
 
 

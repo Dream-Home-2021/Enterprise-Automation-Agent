@@ -1,0 +1,11 @@
+# Process Agent Configuration
+
+mcp_servers:
+  - filesystem
+
+skills: []
+tools: []
+
+rules: _shared/rules.md
+
+

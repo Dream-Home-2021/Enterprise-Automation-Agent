@@ -3,28 +3,37 @@
 通过 `get_config()` 获取 user_id 上下文。
 """
 
-import os
 from uuid import UUID
 
-from langchain_openai import ChatOpenAI
-
 from agent.db import postgres as db
+from agent.src.config import AGENT_MODELS
+from agent.src.llm.factory import ProviderFactory
 from utils.log import get_logger
 
 logger = get_logger(__name__)
 
 _TITLE_LLM = None
+_TITLE_AGENT_NAME = "session_title_agent"
 
 
 def _get_llm():
+    """从 agent_models.yaml chat_agent 配置创建 LLM 实例（规范化配置源）。"""
     global _TITLE_LLM
     if _TITLE_LLM is None:
-        _TITLE_LLM = ChatOpenAI(
-            model=os.getenv("OPENAI_MODEL", "qwen-plus-latest"),
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL"),
-            temperature=0.3,
-        )
+        provider_name = AGENT_MODELS.get_provider(_TITLE_AGENT_NAME)
+        model_config = AGENT_MODELS.get_model_config(_TITLE_AGENT_NAME).copy()
+
+        provider = ProviderFactory().create_provider(provider_name)
+        model_class = provider.get_model_class()
+
+        # 标题生成更确定性，覆盖 temperature
+        model_config["temperature"] = 0.3
+
+        # 补充供应商专属参数（base_url、api_key、headers 等）
+        if hasattr(provider, "get_extra_kwargs"):
+            model_config.update(provider.get_extra_kwargs())
+
+        _TITLE_LLM = model_class(**model_config)
     return _TITLE_LLM
 
 

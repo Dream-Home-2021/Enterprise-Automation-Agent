@@ -16,17 +16,19 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from utils.router import router
+from agent.src.core.api_routes import router
 from agent.db.postgres import init_db, close_pool
 from agent.db.redis import close_redis
-from agent.service import make_generate_response
+from agent.src.system import make_generate_response
 from agent.memory.profile import start_background_extractor, stop_background_extractor
 from utils.log import get_logger
 
 logger = get_logger("main_html")
 
-STATIC_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
-IMAGES_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "images")
+_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_DIR = os.path.join(_BASE, "static")
+IMAGES_DIR = os.path.join(_BASE, "images")
+FRONTEND_DIST = os.path.join(_BASE, "frontend", "dist")
 
 
 @asynccontextmanager
@@ -38,8 +40,8 @@ async def lifespan(app: FastAPI):
     logger.info("Database ready")
 
     logger.info("Creating agent service...")
-    generate_response = await make_generate_response()
-    app.state.generate_response = generate_response
+    generate_response, system_ref = await make_generate_response()
+    app.state.generate_response = (generate_response, system_ref)
     logger.info("Agent service ready")
 
     logger.info("Starting background memory extractor...")
@@ -61,8 +63,16 @@ app = FastAPI(title="My Agent", lifespan=lifespan)
 # 挂载 API 路由
 app.include_router(router)
 
-# 挂载静态文件（图片等）
-if os.path.exists(STATIC_DIR):
+# 挂载静态文件：优先使用 Vue 构建产物，其次后备回旧 static/
+#
+# 构建产物 index.html 中的资源引用是绝对路径 "/assets/*"（Vite 默认 base），
+# 所以必须同时把 dist/assets 挂载到 /assets，否则浏览器拿不到 JS/CSS，页面空白。
+if os.path.exists(FRONTEND_DIST):
+    assets_dir = os.path.join(FRONTEND_DIST, "assets")
+    if os.path.isdir(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="frontend-assets")
+    app.mount("/static", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
+elif os.path.exists(STATIC_DIR):
     app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # 挂载 images 目录
@@ -72,7 +82,11 @@ if os.path.exists(IMAGES_DIR):
 
 @app.get("/")
 async def index():
-    """返回主页面。"""
+    """返回主页面 — 优先 Vue 构建产物。"""
+    if os.path.exists(FRONTEND_DIST):
+        index_path = os.path.join(FRONTEND_DIST, "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
     index_path = os.path.join(STATIC_DIR, "index.html")
     if os.path.exists(index_path):
         return FileResponse(index_path)

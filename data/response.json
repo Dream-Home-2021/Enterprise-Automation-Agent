@@ -1,0 +1,2 @@
+1. HumanMessage(content='Continue the research process', additional_kwargs={}, response_metadata={}, id='human3')
+2. AIMessage(content='处理缺失值，编码分类变量，标准化数值特征。', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {}, 'model_provider': 'openai', 'model_name': 'gpt-4o', 'system_fingerprint': None, 'id': 'gen3', 'service_tier': 'standard', 'finish_reason': 'stop', 'logprobs': None}, id='ai3', tool_calls=[], invalid_tool_calls=[], usage_metadata={})

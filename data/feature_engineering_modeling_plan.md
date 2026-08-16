@@ -1,0 +1,1 @@
+1. Feature engineering and modeling plan: encode categorical variables, scale numerical features, create interaction terms, then train a Random Forest classifier/regressor (depending on target) and evaluate using cross-validation.

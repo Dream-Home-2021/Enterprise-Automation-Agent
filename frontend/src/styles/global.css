@@ -1,0 +1,93 @@
+/* ── Theme tokens ──────────────────────────── */
+:root {
+  --bg-app: #212121;
+  --bg-sidebar: #171717;
+  --bg-main: #181818;
+  --bubble: #2f2f2f;
+  --purple: #6366f1;
+  --purple-hover: #4f46e5;
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --radius-bubble: 16px 16px 4px 16px;
+  --maxw: 768px;
+}
+
+/* ── Reset ────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+  background: var(--bg-app);
+  color: var(--text);
+  display: flex;
+  height: 100vh;
+}
+
+#app { display: flex; width: 100%; height: 100%; }
+
+/* ── Scrollbar ────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ── Animations / Keyframes ───────────────── */
+
+/* Toast 上滑 + 淡入 */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+@keyframes toast-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* 流式文字弹入 */
+@keyframes text-pop {
+  0%   { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Typing dots */
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Transition classes ───────────────────── */
+
+/* Fade */
+.fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; }
+
+/* Message list */
+.msg-enter-active { transition: all 0.25s ease-out; }
+.msg-leave-active { transition: all 0.2s ease-in; }
+.msg-enter-from { opacity: 0; transform: translateY(12px); }
+.msg-leave-to { opacity: 0; transform: scale(0.96); }
+
+/* Attachment chip */
+.chip-enter-active { transition: all 0.2s ease-out; }
+.chip-leave-active { transition: all 0.15s ease-in; }
+.chip-enter-from { opacity: 0; transform: translateX(-8px); }
+.chip-leave-to { opacity: 0; transform: translateX(-8px); }
+
+/* Toast */
+.toast-enter-active { animation: toast-in 0.25s ease-out; }
+.toast-leave-active { animation: toast-out 0.2s ease-in; }
+
+/* ── Utility ──────────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}

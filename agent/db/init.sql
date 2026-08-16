@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS agent_memory_vectors (
     user_id     INTEGER NOT NULL DEFAULT 1,
     session_id  UUID REFERENCES agent_sessions(id) ON DELETE CASCADE,
     content     TEXT NOT NULL,
-    embedding   vector(1536) NOT NULL,
+    embedding   vector(1024) NOT NULL,
     metadata    JSONB DEFAULT '{}',
     created_at  TIMESTAMP NOT NULL DEFAULT NOW()
 );

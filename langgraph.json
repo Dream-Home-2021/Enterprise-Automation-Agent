@@ -1,0 +1,7 @@
+{
+    "dependencies": ["."],
+    "graphs": {
+      "enterprise_automation_agent": "./studio_entry.py:app"
+    },
+    "env": ".env"
+  }

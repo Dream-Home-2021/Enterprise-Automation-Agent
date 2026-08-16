@@ -4,6 +4,8 @@
 提供给 Chat Agent 的用户查询工具，使用 @tool 装饰器。
 """
 
+import asyncio
+
 from langchain.tools import tool
 
 from agent.api import zammad_client
@@ -12,10 +14,22 @@ from utils.log import get_logger
 logger = get_logger(__name__)
 
 
+def _run_async(coro):
+    """在同步函数中安全执行异步协程。"""
+    try:
+        loop = asyncio.get_running_loop()
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor() as pool:
+            future = pool.submit(asyncio.run, coro)
+            return future.result(timeout=120)
+    except RuntimeError:
+        return asyncio.run(coro)
+
+
 @tool
-async def search_users(query: str) -> str:
+def search_users(query: str) -> str:
     """搜索 Zammad 系统中的用户，按姓名或邮箱搜索。返回匹配用户的基本信息。"""
-    results = await zammad_client.search_users(query)
+    results = _run_async(zammad_client.search_users(query))
 
     if not results:
         return f"没有找到匹配「{query}」的用户。"
@@ -32,9 +46,9 @@ async def search_users(query: str) -> str:
 
 
 @tool
-async def get_user(user_id: int) -> str:
+def get_user(user_id: int) -> str:
     """根据用户 ID 获取用户详细信息。包括姓名、邮箱、角色、组织等。"""
-    u = await zammad_client.get_user(user_id)
+    u = _run_async(zammad_client.get_user(user_id))
     return (
         f"用户 #{u.get('id')}\n"
         f"姓名：{u.get('firstname', '')} {u.get('lastname', '')}\n"

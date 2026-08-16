@@ -135,7 +135,7 @@ async def batch_process_pending(interval_mins: int = 15):
     """
     t_start = time.monotonic()
     sessions = await get_pending_sessions(interval_mins)
-    print(sessions)
+    # print(sessions)
     if not sessions:
         logger.debug("Batch extraction: no pending sessions")
         return
@@ -144,7 +144,7 @@ async def batch_process_pending(interval_mins: int = 15):
     processed = 0
     # 遍历出uuid和用户，来获取检查点内的对应会话中的上下文 生成摘要
     for sess in sessions:
-        print(sess)
+        # print(sess)
         t0 = time.monotonic()
         session_id = str(sess["session_id"])
         user_id = sess["user_id"]

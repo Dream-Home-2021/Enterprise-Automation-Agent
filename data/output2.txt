@@ -1,0 +1,1 @@
+1. AIMessage(content='建议先清洗数据，处理缺失值，然后使用随机森林进行预测，评估特征重要性。', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {}, 'model_provider': '', 'model_name': '', 'system_fingerprint': None, 'id': 'ai456', 'service_tier': '', 'finish_reason': 'stop', 'logprobs': None}, id='ai789', tool_calls=[], invalid_tool_calls=[], usage_metadata={})
