@@ -1,4 +1,4 @@
-# My-Agent
+# MVP
 
 LangGraph-based agent project.
 
