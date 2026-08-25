@@ -1,37 +1,11 @@
-# 🤖 Enterprise Automation Agent
-
-基于 **LangGraph** 构建的企业级多智能体自动化系统，集成 Zammad 工单管理、AI 研究分析流水线、长短期记忆系统与 Vue 3 前端界面。
-
----
-
-## 📋 目录
-
-- [项目概述](#项目概述)
-- [核心功能](#核心功能)
-- [系统架构](#系统架构)
-- [智能体说明](#智能体说明)
-- [记忆系统](#记忆系统)
-- [工具生态](#工具生态)
-- [技术栈](#技术栈)
-- [目录结构](#目录结构)
-- [快速开始](#快速开始)
-- [环境变量配置](#环境变量配置)
-- [模型配置](#模型配置)
-- [MCP-工具配置](#mcp-工具配置)
-- [API-接口](#api-接口)
-- [前端使用](#前端使用)
-- [LangGraph-Studio](#langgraph-studio)
-- [分支策略](#分支策略)
-
----
-
+# Enterprise Automation Agent
 ## 项目概述
 
 Enterprise Automation Agent 是一个面向企业场景的 AI 智能体平台，支持两种工作模式：
 
 | 模式 | 触发条件 | 描述 |
 |------|----------|------|
-| **Chat 模式** | 工单相关问题（创建/查询/更新） | 连接 Zammad 客服系统，自动处理工单操作 |
+| **Chat 模式** | 工单相关问题（创建/查询/更新） | 连接 Zammad 系统，自然语言自动处理业务流程 |
 | **Analysis 模式** | 数据分析/研究类问题 | 启动多 Agent 研究流水线，自动生成报告 |
 
 系统通过 **LangGraph interrupt()** 实现 Human-in-the-Loop（人机协作），关键节点等待人类决策后再继续执行，同时支持进程崩溃后的断点恢复。
@@ -40,25 +14,25 @@ Enterprise Automation Agent 是一个面向企业场景的 AI 智能体平台，
 
 ## 核心功能
 
-### 🔄 双模式智能路由
+### 双模式智能路由
 - **Main Router** 自动识别用户意图，路由到 Chat 子图或 Analysis 子图
 - 两个子图共享同一 Redis 检查点，状态可跨重启持久化
 
-### 🧠 多层记忆系统
+### 多层记忆系统
 - **短期记忆**：Redis 持久化 LangGraph checkpoint，支持跨会话恢复
-- **长期记忆**：PostgreSQL + pgvector，自动提取用户偏好和对话摘要
+- **长期记忆**：语义记忆和非语义记忆，PostgreSQL + pgvector，自动提取用户偏好和对话摘要
 - **用户画像**：后台异步提取，形成结构化用户偏好 JSON
 
-### 🤖 10 个专业化 Agent
+### 多Agent协作
 - 假设生成、流程规划、可视化、搜索、代码生成、报告、质检、笔记、精炼、聊天
 
-### 🔌 MCP 协议支持
+### MCP 协议支持
 - 文件系统访问、Web 搜索、GitHub 仓库接入（通过 Model Context Protocol）
 
-### 👁️ LangSmith 可观测性
+### LangSmith 可观测性
 - 完整链路追踪，支持 LangGraph Studio 可视化调试
 
-### 🌊 SSE 实时流式输出
+### SSE 实时流式输出
 - Server-Sent Events 将 AI 回复逐 token 推送到前端，无需轮询
 
 ---
@@ -118,7 +92,7 @@ Enterprise Automation Agent 是一个面向企业场景的 AI 智能体平台，
 
 | Agent | 职责 |
 |-------|------|
-| **Chat Agent** | Zammad 工单操作（列表/查询/创建/更新）+ 用户搜索 |
+| **Chat Agent** | Zammad系统操作（列表/查询/创建/更新）+ 用户搜索 |
 
 ### 后台 Agents
 
@@ -192,25 +166,6 @@ graph 执行 → 到达 HumanChoice 节点 → interrupt() 暂停
 | `web-search` | Tavily 网页搜索 |
 | `github` | GitHub 仓库读写 |
 
----
-
-## 技术栈
-
-| 层级 | 技术 |
-|------|------|
-| **AI 框架** | LangGraph, LangChain |
-| **LLM 支持** | OpenAI, Anthropic, Google, OpenRouter, Groq, Ollama, Azure |
-| **后端** | FastAPI + Uvicorn |
-| **前端** | Vue 3 + TypeScript + Vite |
-| **数据库** | PostgreSQL 17 + pgvector |
-| **缓存/checkpoint** | Redis 8 |
-| **爬虫** | Selenium + ChromeDriver + BeautifulSoup |
-| **网页抓取** | FireCrawl, fastCRW |
-| **可观测性** | LangSmith |
-| **协议** | MCP (Model Context Protocol) |
-| **容器化** | Docker Compose |
-
----
 
 ## 目录结构
 
