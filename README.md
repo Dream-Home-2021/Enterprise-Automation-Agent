@@ -527,7 +527,7 @@ langgraph dev
 DATAGEN 提供了多智能体协同研究自动化的设计范式，本项目在此基础上进行了以下扩展：
 
 - 集成 **Zammad 工单管理**，支持 Chat 与 Analysis 双模式路由
-- 引入 **Redis + PostgreSQL 双层记忆系统**，实现跨会话状态持久化
+- 引入 **Redis + PostgreSQL 双层记忆系统**，实现跨会话状态持久化，支持Agent节点执行步骤的中断和任意恢复。
 - 增加 **LangGraph interrupt()** 人机协作机制
 - 添加 **Vue 3 前端**与 **SSE 流式推送**
 - 接入 **MCP 协议**工具生态与 **LangSmith** 可观测性
