@@ -8,8 +8,6 @@ Enterprise Automation Agent 是一个面向企业场景的 AI 智能体平台，
 | **Chat 模式** | 工单相关问题（创建/查询/更新） | 连接 Zammad 系统，自然语言自动处理业务流程 |
 | **Analysis 模式** | 数据分析/研究类问题 | 启动多 Agent 研究流水线，自动生成报告 |
 
-系统通过 **LangGraph interrupt()** 实现 Human-in-the-Loop（人机协作），关键节点等待人类决策后再继续执行，同时支持进程崩溃后的断点恢复。
-
 ---
 
 ## 核心功能
