@@ -1,0 +1,1 @@
+1. Interpretation and validation plan: interpret model results (accuracy, precision, recall, F1, feature importance), validate model performance on hold-out test set (not just cross-validation), check for overfitting, and prepare final report with findings and recommendations.

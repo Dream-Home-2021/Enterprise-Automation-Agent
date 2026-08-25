@@ -1,0 +1,2 @@
+1. datapath:1122.csv 哎哟，请你使用机器学习帮我继续数据分析这个文件。 你的回答只需要100字以内，不能超过         回答我时用中文回复，json输出格式请严格遵守下面的格式:
+2. HumanMessage(content='datapath:1122.csv 哎哟，请你使用机器学习帮我继续数据分析这个文件。 你的回答只需要100字以内，不能超过         回答我时用中文回复，json输出格式请严格遵守下面的格式:', additional_kwargs={}, response_metadata={}, id='user123')

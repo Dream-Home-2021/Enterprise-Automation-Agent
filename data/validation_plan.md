@@ -1,0 +1,1 @@
+1. Validation step: evaluate trained Random Forest model on hold-out test set (20% holdout from earlier split). Calculate accuracy, precision, recall, F1, and ROC-AUC. Compare with cross-validation results to check for overfitting.
