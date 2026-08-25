@@ -1,0 +1,51 @@
+---
+# Agent Memory System — 独立数据库容器
+# 包含 PostgreSQL 17 + Redis 8
+#
+# 启动: docker compose -f agent-docker-compose.yml up -d
+# 停止: docker compose -f agent-docker-compose.yml down
+# 数据持久化: Docker volumes (agent-postgres-data, agent-redis-data)
+
+services:
+  agent-postgresql:
+    image: agent-postgres-pgvector:latest
+    container_name: agent-postgresql
+    restart: unless-stopped
+    ports:
+      - "5433:5432"   # 宿主机 5433 → 容器 5432（避免与 Zammad 的 5432 冲突）
+    environment:
+      POSTGRES_DB: agent_memory
+      POSTGRES_USER: agent
+      POSTGRES_PASSWORD: agent
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
+    volumes:
+      - agent-postgres-data:/var/lib/postgresql/data
+      - ./agent/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent -d agent_memory"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+
+  agent-redis:
+    image: redis:8.8-alpine
+    container_name: agent-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"   # 宿主机 6380 → 容器 6379（避免与 Zammad 的 6379 冲突）
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - agent-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
+volumes:
+  agent-postgres-data:
+    driver: local
+  agent-redis-data:
+    driver: local
