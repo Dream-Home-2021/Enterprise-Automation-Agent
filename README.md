@@ -541,12 +541,3 @@ DATAGEN 提供了多智能体协同研究自动化的设计范式，本项目在
 MIT License
 
 ---
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
-
-1. Fork 本仓库
-2. 创建 `feature/your-feature` 分支
-3. 提交变更（遵循 conventional commits 规范）
-4. 发起 Pull Request 到 `core` 分支
