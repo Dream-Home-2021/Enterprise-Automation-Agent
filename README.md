@@ -18,7 +18,7 @@ Enterprise Automation Agent 是一个面向企业场景的 AI 智能体平台，
 
 ### 多层记忆系统
 - **短期记忆**：Redis 持久化 LangGraph checkpoint，支持跨会话恢复，支持Agent节点执行步骤的中断和精确恢复。
-- **长期记忆**：语义记忆和非语义记忆，PostgreSQL + pgvector，自动提取用户偏好和对话摘要。
+- **长期记忆**：语义记忆和非语义记忆，PostgreSQL + pgvector，自动提取用户偏好和对话摘要，RAG向量检索。
 - **用户画像**：后台异步提取，形成结构化用户偏好 JSON
 
 ### 多Agent协作
